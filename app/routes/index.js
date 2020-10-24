@@ -1,8 +1,8 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
 
-router.route('/user').post('/login', function (req, res) {
-	res.send("hello");
-});
+const custom = require("../controllers/custom.controller.js");
+
+router.route('/fileupload').post(custom.fileupload);
 
 module.exports = router;

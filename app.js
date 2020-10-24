@@ -15,8 +15,9 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static("upload"));
 
 const userRoutes = require("./app/routes/user.routes");
+const customRoutes = require("./app/routes/index");
 app.use('/api/user', userRoutes);
-
+app.use('/api/custom', customRoutes);
 // set port, listen for requests
 app.listen(process.env.SERVER_PORT, () => {
   console.log(`Server is running on port ${process.env.SERVER_PORT}.`);
