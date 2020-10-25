@@ -25,7 +25,6 @@ exports.fileupload = (req, res) => {
   upload(req, res, function(err) {
       // req.file contains information of uploaded file
       // req.body contains information of text fields, if there were any
-      console.log(req);
       if (req.fileValidationError) {
           return res.send(req.fileValidationError);
       }

@@ -12,43 +12,48 @@ const User = function(user) {
 };
 
 User.register = async (newUser, result) => {
-  try {
-  	// Create a token for activating account
-  	const token = jwt.sign({ email: newUser.email }, secret, { expiresIn: '24h' });
-		const encryptedPassword = await bcrypt.hash(newUser.password, 10);
-
-    const [res, fields] = await sql.promise().query(
-      "INSERT INTO user SET email = ?, password = ?, name = ?, token = ?, createdAt = NOW(), updatedAt = NOW()", 
-      [newUser.email, encryptedPassword, newUser.name ? newUser.name : null , token]
-    );
-
-    console.log("Created 'user': ", { userId: res.insertId, ...newUser });
-    result(null, { id: res.insertId, ...newUser });
-  } catch (err) {
-    console.log("error: ", err);
-    result(err, null);
-  };
+	// Create a token for activating account
+	const token = jwt.sign({ email: newUser.email }, secret, { expiresIn: '24h' });
+	const encryptedPassword = await bcrypt.hash(newUser.password, 10);
+	const d = new Date();
+	const dateString = d.toString();
+	// open the MySQL connection
+  sql.connect(error => {
+    if (error) result({ kind: 'sql' }, error);;
+		console.log("Successfully connected to the database.");
+    sql.query("INSERT INTO user SET email = ?, password = ?, name = ?, token = ?, date = ?", 
+		[newUser.email, encryptedPassword, newUser.name ? newUser.name : null , token, dateString], function (err, rows, fields) {
+      if (err) {
+        result({ kind: 'sql' }, err);
+      }
+      result(null, {id: rows.insertId, ...newUser});
+    });
+  });
 };
 
 User.login = async (user, result) => {
-  try {
-  	const [res, fields] = await sql.promise().query('SELECT * FROM user WHERE email = ?', [user.email]);
-  	if (res.length > 0) {
-  		const pwdValidation = bcrypt.compareSync(user.password, res[0].password);
-  		
-  		if (pwdValidation) {
-  			const token = jwt.sign({ email: user.email }, secret, { expiresIn: '24h' });
-    		result(null, { token });
-  		} else {
-  			throw { kind: "password" };
-  		}
-  	} else {
-  		throw { kind: "user" };
-  	}
-  } catch (err) {
-  	console.log({ err });
-    result(err, null);
-  };
+	sql.connect(error => {
+    if (error) throw error;
+		console.log("Successfully connected to the database.");
+		sql.query('SELECT * FROM user WHERE email = ?', [user.email], function (err, res, fields) {
+      if (err) {
+        result({ kind: 'sql' }, err);
+			}
+			if (res.length > 0) {
+				const pwdValidation = bcrypt.compareSync(user.password, res[0].password);
+				
+				if (pwdValidation) {
+					const token = jwt.sign({ email: user.email }, secret, { expiresIn: '24h' });
+					result(null, { token });
+				} else {
+					result({ kind: 'password' }, null);
+				}
+				result(null, {id: rows.insertId});
+			} else {
+				result({ kind: 'user' }, null);
+			}
+    });
+	});
 };
 
 module.exports = User;
