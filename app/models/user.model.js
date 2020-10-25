@@ -48,7 +48,7 @@ User.login = async (user, result) => {
 				} else {
 					result({ kind: 'password' }, null);
 				}
-				result(null, {id: rows.insertId});
+				result(null, {id: res.insertId});
 			} else {
 				result({ kind: 'user' }, null);
 			}
