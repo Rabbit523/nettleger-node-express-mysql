@@ -5,71 +5,81 @@ const Module = function(module) {
 	return module;
 };
 
-Module.create = async (newModule, result) => {
+Module.create = async (request, response) => {
   // open the MySQL connection
   sql.connect(error => {
-    if (error) result(error);
+    if (error) throw error;
     console.log("Successfully connected to the database.");
-    var d = new Date();
-    var dateString = d.toString();
-    sql.query("INSERT INTO module SET name = ?, content = ?, date = ? ", [newModule.name, newModule.content, dateString], function (err, rows, fields) {
+    const d = new Date();
+    const dateString = d.toString();
+    sql.query("INSERT INTO module SET name = ?, content = ?, date = ? ", [request.name, request.content, dateString], function (err, rows) {
       if (err) {
-        result(err);
+        throw err;
       }
-      result(null, {id: rows.insertId});
+      response(null, {id: rows.insertId});
     });
   });
 };
 
-Module.get = async (newModule, result) => {
-  try {
-  	console.log('module before create: ', newModule);
-  	
-    const [res, fields] = await sql.promise().query(
-      "INSERT INTO user SET email = ?, password = ?, name = ?, token = ?, createdAt = NOW(), updatedAt = NOW()", 
-      [newUser.email, encryptedPassword, newUser.name ? newUser.name : null , token]
-    );
+Module.getById = async (request, response) => {
+  sql.connect(error => {
+    if (error) throw error;
+    console.log("Successfully connected to the database.");
 
-    console.log("Created 'user': ", { userId: res.insertId, ...newUser });
-    result(null, { id: res.insertId, ...newUser });
-  } catch (err) {
-    console.log("error: ", err);
-    result(err, null);
-  };
+    sql.query("SELECT * FROM module WHERE id = ?", [request.moduleId], function (err, result ) {
+      if (err) {
+        throw err;
+      }
+      return response(null, { ...result[0] });
+    });
+  });
 };
 
-Module.update = async (newModule, result) => {
-  try {
-  	console.log('module before create: ', newModule);
-  	
-    const [res, fields] = await sql.promise().query(
-      "INSERT INTO user SET email = ?, password = ?, name = ?, token = ?, createdAt = NOW(), updatedAt = NOW()", 
-      [newUser.email, encryptedPassword, newUser.name ? newUser.name : null , token]
-    );
-
-    console.log("Created 'user': ", { userId: res.insertId, ...newUser });
-    result(null, { id: res.insertId, ...newUser });
-  } catch (err) {
-    console.log("error: ", err);
-    result(err, null);
-  };
+Module.getAll = async (request, response) => {
+  // open the MySQL connection
+  sql.connect(error => {
+    if (error) throw error;
+    console.log("Successfully connected to the database.");
+    
+    sql.query("SELECT * FROM module", function (err, result) {
+      if (err) {
+        throw err;
+      }
+      response(null, {...result});
+    });
+  });
 };
 
-Module.delete = async (newModule, result) => {
-  try {
-  	console.log('module before create: ', newModule);
-  	
-    const [res, fields] = await sql.promise().query(
-      "INSERT INTO user SET email = ?, password = ?, name = ?, token = ?, createdAt = NOW(), updatedAt = NOW()", 
-      [newUser.email, encryptedPassword, newUser.name ? newUser.name : null , token]
-    );
+Module.update = async (request, response) => {
+  const { id, data } = request;
+  console.log(data.name);
+  sql.connect(error => {
+    if (error) throw error;
+    console.log("Successfully connected to the database.");
+    const d = new Date();
+    const dateString = d.toString();
+    console.log(request);
+    sql.query("UPDATE module SET name = ?, content = ?, date = ? WHERE id = ? ", [data.name, data.content, dateString, id], function (err, result) {
+      if (err) {
+        throw err;
+      }
+      response(null, {...result});
+    });
+  });
+};
 
-    console.log("Created 'user': ", { userId: res.insertId, ...newUser });
-    result(null, { id: res.insertId, ...newUser });
-  } catch (err) {
-    console.log("error: ", err);
-    result(err, null);
-  };
+Module.delete = async (request, response) => {
+  sql.connect(error => {
+    if (error) throw error;
+    console.log("Successfully connected to the database.");
+
+    sql.query("DELETE FROM module WHERE id = ?", [request.moduleId], function (err, result ) {
+      if (err) {
+        throw err;
+      }
+      response(null, { ...result });
+    });
+  });
 };
 
 module.exports = Module;

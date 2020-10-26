@@ -26,7 +26,7 @@ exports.create = (req, res) => {
 };
 
 // Get Module with ID
-exports.get = (req, res) => {
+exports.getById = (req, res) => {
   // Validate request
   if (!req.body) {
     // Unique validation needed
@@ -34,9 +34,11 @@ exports.get = (req, res) => {
       message: "Content can not be empty!"
     });
   }
-
   // Save User in the database
-  Module.get(new Module(req.body), (err, data) => resCallback(res, err, data, "Some error occurred while authenticating."));
+  Module.getById(new Module(req.body), (err, data) => resCallback(res, err, data, "Some error occurred while authenticating."));
+};
+exports.getAll = (req, res) => {
+  Module.getAll(req, (err, data) => resCallback(res, err, data, "Some error occurred while authenticating."));
 };
 
 // Get Module with ID
