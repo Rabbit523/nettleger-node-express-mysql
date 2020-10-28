@@ -17,10 +17,12 @@ app.use(express.static("upload"));
 const userRoutes = require("./app/routes/user.routes");
 const customRoutes = require("./app/routes/custom.routes");
 const moduleRoutes = require("./app/routes/module.routes");
+const sectionRoutes = require("./app/routes/section.routes");
 
 app.use('/api/user', userRoutes);
 app.use('/api/custom', customRoutes);
 app.use('/api/module', moduleRoutes);
+app.use('/api/section', sectionRoutes);
 
 // set port, listen for requests
 app.listen(process.env.SERVER_PORT, () => {

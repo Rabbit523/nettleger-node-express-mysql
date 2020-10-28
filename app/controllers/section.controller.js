@@ -1,4 +1,4 @@
-const Module = require("../models/module.model.js");
+const Section = require("../models/section.model.js");
 
 const resCallback = (res, err, data, defaultErrMessage = null) => {
   if (err) {
@@ -11,7 +11,7 @@ const resCallback = (res, err, data, defaultErrMessage = null) => {
   }
 };
 
-// Create a module
+// Create a section
 exports.create = (req, res) => {
   // Validate request
   if (!req.body) {
@@ -21,11 +21,11 @@ exports.create = (req, res) => {
     });
   }
 
-  // Save module in the database
-  Module.create(new Module(req.body), (err, data) => resCallback(res, err, data, "Some error occurred while registering."));
+  // Save section in the database
+  Section.create(new Section(req.body), (err, data) => resCallback(res, err, data, "Some error occurred while registering."));
 };
 
-// Get a module by ID
+// Get Section by ID
 exports.getById = (req, res) => {
   // Validate request
   if (!req.body) {
@@ -35,15 +35,15 @@ exports.getById = (req, res) => {
     });
   }
   // Save User in the database
-  Module.getById(new Module(req.body), (err, data) => resCallback(res, err, data, "Some error occurred while authenticating."));
+  Section.getById(new Section(req.body), (err, data) => resCallback(res, err, data, "Some error occurred while authenticating."));
 };
 
-// Get all modules
+// Get all sections
 exports.getAll = (req, res) => {
-  Module.getAll(req, (err, data) => resCallback(res, err, data, "Some error occurred while authenticating."));
+  Section.getAll(req, (err, data) => resCallback(res, err, data, "Some error occurred while authenticating."));
 };
 
-// Update a module by ID
+// Update a section by ID
 exports.update = (req, res) => {
   // Validate request
   if (!req.body) {
@@ -54,10 +54,10 @@ exports.update = (req, res) => {
   }
 
   // Save User in the database
-  Module.update(new Module(req.body), (err, data) => resCallback(res, err, data, "Some error occurred while authenticating."));
+  Section.update(new Section(req.body), (err, data) => resCallback(res, err, data, "Some error occurred while authenticating."));
 };
 
-// Delete a module by ID
+// Delete a section by ID
 exports.delete = (req, res) => {
   // Validate request
   if (!req.body) {
@@ -68,5 +68,5 @@ exports.delete = (req, res) => {
   }
 
   // Save User in the database
-  Module.delete(new Module(req.body), (err, data) => resCallback(res, err, data, "Some error occurred while authenticating."));
+  Section.delete(new Section(req.body), (err, data) => resCallback(res, err, data, "Some error occurred while authenticating."));
 };
