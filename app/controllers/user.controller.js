@@ -17,7 +17,7 @@ const resCallback = (res, err, data, defaultErrMessage = null) => {
       });
     }
   } else {
-    res.send(data);
+    res.status(200).send(data);
   }
 };
 

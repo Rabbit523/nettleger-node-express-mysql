@@ -33,26 +33,26 @@ User.register = async (newUser, result) => {
 
 User.login = async (user, result) => {
 	sql.connect(error => {
-    if (error) throw error;
+    if (error) result({ kind: 'sql' }, error);
 		console.log("Successfully connected to the database.");
 		sql.query('SELECT * FROM user WHERE email = ?', [user.email], function (err, res, fields) {
       if (err) {
         result({ kind: 'sql' }, err);
 			}
 			if (res.length > 0) {
-				const pwdValidation = bcrypt.compareSync(user.password, res[0].password);
+				const pwd = user.password ? user.password : '';
+				const pwdValidation = bcrypt.compareSync(pwd, res[0].password);
 				
 				if (pwdValidation) {
 					const token = jwt.sign({ email: user.email }, secret, { expiresIn: '24h' });
-					result(null, { token });
+					result(null, { token, id: res.insertId });
 				} else {
 					result({ kind: 'password' }, null);
 				}
-				result(null, {id: res.insertId});
 			} else {
 				result({ kind: 'user' }, null);
 			}
-    });
+  	});
 	});
 };
 

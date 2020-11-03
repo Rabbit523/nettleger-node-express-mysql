@@ -8,14 +8,12 @@ const Section = function(section) {
 Section.create = async (request, response) => {
   // open the MySQL connection
   sql.connect(error => {
-    if (error) throw error;
+    if (error) response(error, null);
     console.log("Successfully connected to the database.");
     const d = new Date();
     const dateString = d.toString();
     sql.query("INSERT INTO section SET name = ?, content = ?, date = ? ", [request.name, request.content, dateString], function (err, rows) {
-      if (err) {
-        throw err;
-      }
+      if (err) response(err, null);
       response(null, {id: rows.insertId});
     });
   });
@@ -23,14 +21,12 @@ Section.create = async (request, response) => {
 
 Section.getById = async (request, response) => {
   sql.connect(error => {
-    if (error) throw error;
+    if (error) response(error, null);
     console.log("Successfully connected to the database.");
 
     sql.query("SELECT * FROM section WHERE id = ?", [request.sectionId], function (err, result ) {
-      if (err) {
-        throw err;
-      }
-      return response(null, { ...result[0] });
+      if (err) response(err, null);
+      response(null, { ...result[0] });
     });
   });
 };
@@ -38,13 +34,11 @@ Section.getById = async (request, response) => {
 Section.getAll = async (request, response) => {
   // open the MySQL connection
   sql.connect(error => {
-    if (error) throw error;
+    if (error) response(error, null);
     console.log("Successfully connected to the database.");
     
     sql.query("SELECT * FROM section", function (err, result) {
-      if (err) {
-        throw err;
-      }
+      if (err) response(err, null);
       response(null, {...result});
     });
   });
@@ -53,14 +47,12 @@ Section.getAll = async (request, response) => {
 Section.update = async (request, response) => {
   const { id, data } = request;
   sql.connect(error => {
-    if (error) throw error;
+    if (error) response(error, null);
     console.log("Successfully connected to the database.");
     const d = new Date();
     const dateString = d.toString();
     sql.query("UPDATE section SET name = ?, content = ?, date = ? WHERE id = ? ", [data.name, data.content, dateString, id], function (err, result) {
-      if (err) {
-        throw err;
-      }
+      if (err) response(err, null);
       response(null, {...result});
     });
   });
@@ -68,13 +60,11 @@ Section.update = async (request, response) => {
 
 Section.delete = async (request, response) => {
   sql.connect(error => {
-    if (error) throw error;
+    if (error) response(error, null);
     console.log("Successfully connected to the database.");
 
     sql.query("DELETE FROM section WHERE id = ?", [request.sectionId], function (err, result ) {
-      if (err) {
-        throw err;
-      }
+      if (err) response(err, null);
       response(null, { ...result });
     });
   });
