@@ -7,7 +7,7 @@ const resCallback = (res, err, data, defaultErrMessage = null) => {
         defaultErrMessage || err.message || "Internal server error"
     });
   } else {
-    res.send(data);
+    res.status(200).send(data);
   }
 };
 

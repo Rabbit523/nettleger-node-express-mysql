@@ -18,11 +18,13 @@ const userRoutes = require("./app/routes/user.routes");
 const customRoutes = require("./app/routes/custom.routes");
 const moduleRoutes = require("./app/routes/module.routes");
 const sectionRoutes = require("./app/routes/section.routes");
+const pageRoutes = require("./app/routes/page.routes");
 
 app.use('/api/user', userRoutes);
 app.use('/api/custom', customRoutes);
 app.use('/api/module', moduleRoutes);
 app.use('/api/section', sectionRoutes);
+app.use('/api/page', pageRoutes);
 
 // set port, listen for requests
 app.listen(process.env.SERVER_PORT, () => {
