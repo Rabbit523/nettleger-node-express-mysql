@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const controller = require("../controllers/page.controller.js");
+const controller = require("../controllers/treatment.controller.js");
 
 router.route('/create').post(controller.create);
 router.route('/get').post(controller.getById);

@@ -1,4 +1,4 @@
-const Page = require("../models/page.model.js");
+const Treatment = require("../models/treatment.model.js");
 
 const resCallback = (res, err, data, defaultErrMessage = null) => {
   if (err) {
@@ -11,7 +11,7 @@ const resCallback = (res, err, data, defaultErrMessage = null) => {
   }
 };
 
-// Create a Page
+// Create a Treatment
 exports.create = (req, res) => {
   // Validate request
   if (!req.body) {
@@ -21,11 +21,11 @@ exports.create = (req, res) => {
     });
   }
 
-  // Save Page in the database
-  Page.create(new Page(req.body), (err, data) => resCallback(res, err, data, "Some error occurred while registering."));
+  // Save Treatment in the database
+  Treatment.create(new Treatment(req.body), (err, data) => resCallback(res, err, data, "Some error occurred while registering."));
 };
 
-// Get Page by ID
+// Get Treatment by ID
 exports.getById = (req, res) => {
   // Validate request
   if (!req.body) {
@@ -35,10 +35,10 @@ exports.getById = (req, res) => {
     });
   }
   // Save User in the database
-  Page.getById(new Page(req.body), (err, data) => resCallback(res, err, data, "Some error occurred while authenticating."));
+  Treatment.getById(new Treatment(req.body), (err, data) => resCallback(res, err, data, "Some error occurred while authenticating."));
 };
 
-// Get Page by ID
+// Get Treatment by ID
 exports.getBySlug = (req, res) => {
   // Validate request
   if (!req.body) {
@@ -48,15 +48,15 @@ exports.getBySlug = (req, res) => {
     });
   }
   // Save User in the database
-  Page.getBySlug(new Page(req.body), (err, data) => resCallback(res, err, data, "Some error occurred while authenticating."));
+  Treatment.getBySlug(new Treatment(req.body), (err, data) => resCallback(res, err, data, "Some error occurred while authenticating."));
 };
 
-// Get all Pages
+// Get all Treatments
 exports.getAll = (req, res) => {
-  Page.getAll(req, (err, data) => resCallback(res, err, data, "Some error occurred while authenticating."));
+  Treatment.getAll(req, (err, data) => resCallback(res, err, data, "Some error occurred while authenticating."));
 };
 
-// Update a Page by ID
+// Update a Treatment by ID
 exports.update = (req, res) => {
   // Validate request
   if (!req.body) {
@@ -67,10 +67,10 @@ exports.update = (req, res) => {
   }
 
   // Save User in the database
-  Page.update(new Page(req.body), (err, data) => resCallback(res, err, data, "Some error occurred while authenticating."));
+  Treatment.update(new Treatment(req.body), (err, data) => resCallback(res, err, data, "Some error occurred while authenticating."));
 };
 
-// Delete a Page by ID
+// Delete a Treatment by ID
 exports.delete = (req, res) => {
   // Validate request
   if (!req.body) {
@@ -81,5 +81,5 @@ exports.delete = (req, res) => {
   }
 
   // Save User in the database
-  Page.delete(new Page(req.body), (err, data) => resCallback(res, err, data, "Some error occurred while authenticating."));
+  Treatment.delete(new Treatment(req.body), (err, data) => resCallback(res, err, data, "Some error occurred while authenticating."));
 };

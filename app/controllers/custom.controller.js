@@ -39,6 +39,8 @@ exports.fileupload = (req, res) => {
       }
 
       // Display uploaded image for user validation
-      res.send({path: req.file.path});
+      res.send({
+        path: `upload/${req.file.fieldname}-${req.file.originalname}`
+      });
   });
 };

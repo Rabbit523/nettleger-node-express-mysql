@@ -1,5 +1,7 @@
 const User = require("../models/user.model.js");
-
+const cors = require("cors", {
+  origin: true
+});
 const resCallback = (res, err, data, defaultErrMessage = null) => {
   if (err) {
     if (err.kind === "user") {
@@ -47,4 +49,13 @@ exports.login = (req, res) => {
 
   // Save User in the database
   User.login(new User(req.body), (err, data) => resCallback(res, err, data, "Some error occurred while authenticating."));
+};
+
+exports.test = (req, res) => {
+  console.log("sniper");
+  res.send({msg: 'WTF!!!! This is CORS-enabled for only example.com.'})
+  // return cors(req, res, () => {
+  //   console.log("request");
+  //   res.send({msg: 'WTF!!!! This is CORS-enabled for only example.com.'})
+  // });
 };
