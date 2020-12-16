@@ -1,5 +1,7 @@
 // File upload
 const multer = require('multer');
+const axios = require('axios');
+const parseString = require('xml2js').parseString;
 const storage = multer.diskStorage({
   destination: function(req, file, cb) {
     cb(null, 'upload/');
@@ -43,4 +45,41 @@ exports.fileupload = (req, res) => {
         path: `upload/${req.file.fieldname}-${req.file.originalname}`
       });
   });
+};
+
+exports.registerNets = async (req, res) => {
+  const merchantId = '12003869'
+  const token = 'Nj8?(Mq5c_3F!Jf74k)R'
+  const orderNumber = 'T12345'
+  const amount = 299 * 100
+  const currencyCode = 'EUR'
+  const serviceType = 'C'
+  const pan = req.body.pan;
+  const expiryDate = req.body.expiryDate
+  const securityCode = req.body.securityCode
+
+  const response = await axios.get(`https://test.epayment.nets.eu/Netaxept/Register.aspx?merchantId=${merchantId}&token=${token}&orderNumber=${orderNumber}&amount=${amount}&CurrencyCode=${currencyCode}&serviceType=${serviceType}&pan=${pan}&expiryDate=${expiryDate}&securityCode=${securityCode}`);
+  if(response.status == 200) {
+    const xml = response.data;
+    parseString(xml, {trim: true}, function (err, result) {
+      if (err) {
+        res.status(400).send({
+          message: "Netaxept response xml parse failed"
+        });
+      }
+      if (result.RegisterResponse) {
+        res.send({
+          transactionId: result.RegisterResponse.TransactionId
+        });
+      } else if (result.Exception) {
+        res.status(400).send({
+          message: result.Exception.Error[0].Message[0]
+        });
+      }
+    });
+  } else {
+    res.status(400).send({
+      message: "Netaxept register failed"
+    });
+  }
 };
