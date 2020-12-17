@@ -51,12 +51,12 @@ exports.registerNets = async (req, res) => {
   const merchantId = '12003869'
   const token = 'Nj8?(Mq5c_3F!Jf74k)R'
   const orderNumber = 'T12345'
-  const amount = 299 * 100
   const currencyCode = 'EUR'
   const serviceType = 'C'
   const pan = req.body.pan;
   const expiryDate = req.body.expiryDate
   const securityCode = req.body.securityCode
+  const amount = req.body.amount
 
   const response = await axios.get(`https://test.epayment.nets.eu/Netaxept/Register.aspx?merchantId=${merchantId}&token=${token}&orderNumber=${orderNumber}&amount=${amount}&CurrencyCode=${currencyCode}&serviceType=${serviceType}&pan=${pan}&expiryDate=${expiryDate}&securityCode=${securityCode}`);
   if(response.status == 200) {
