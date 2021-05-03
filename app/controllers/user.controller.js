@@ -52,7 +52,6 @@ exports.login = (req, res) => {
 };
 
 exports.test = (req, res) => {
-  console.log("sniper");
   res.send({msg: 'WTF!!!! This is CORS-enabled for only example.com.'})
   // return cors(req, res, () => {
   //   console.log("request");

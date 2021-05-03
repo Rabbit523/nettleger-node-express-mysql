@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const controller = require("../controllers/treatment.controller.js");
+const controller = require("../controllers/covid.controller.js");
 
 router.route('/info').get(controller.info);
 router.route('/create').post(controller.create);

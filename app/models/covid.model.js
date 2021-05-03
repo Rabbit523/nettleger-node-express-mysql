@@ -1,27 +1,28 @@
 const sql = require("./db.js");
 
 // constructor
-const Page = function(page) {
-	return page;
+const Covid = function(covid) {
+	return covid;
 };
 
-Page.create = async (request, response) => {
+Covid.create = async (request, response) => {
   // open the MySQL connection
   sql.connect(error => {
     if (error) response(error, null);
     console.log("Successfully connected to the database.");
     const d = new Date();
     const dateString = d.toString();
-    sql.query("INSERT INTO page SET name = ?, slug = ?, meta_title = ?, meta_description = ?, type = ?, sections = ?, date = ?, status = ?, page_content = ? ",
+    sql.query("INSERT INTO covid SET name = ?, link = ?, meta_title = ?, meta_description = ?, description = ?, cost = ?, btnName = ?, date = ?, steps = ?, content = ? ",
       [request.name,
-       request.slug ? request.slug : request.name.toLowerCase(),
+       request.link ? request.link : request.name.toLowerCase().replace(' ', '_'),
        request.meta_title,
        request.meta_description,
-       request.type ? request.type : 'single',
-       request.sections ? JSON.stringify(request.sections) : null,
+       request.description,
+       request.cost,
+       request.btnName,
        dateString,
-       0,
-       request.page_content ? JSON.stringify(request.page_content) : null
+       request.steps ? JSON.stringify(request.steps) : null,
+       request.content ? JSON.stringify(request.content) : null,
       ],
       function (err, rows) {
         if (err) response(err, null);
@@ -31,12 +32,12 @@ Page.create = async (request, response) => {
   });
 };
 
-Page.getById = async (request, response) => {
+Covid.getById = async (request, response) => {
   sql.connect(error => {
     if (error) response(error, null);
     console.log("Successfully connected to the database.");
 
-    sql.query("SELECT * FROM page WHERE id = ?", [request.pageId], function (err, result ) {
+    sql.query("SELECT * FROM covid WHERE id = ?", [request.covidId], function (err, result ) {
       if (err) response(err, null);
       response(null, { ...result[0] });
     });
@@ -51,9 +52,9 @@ function getAllSlugs () {
     });
   });
 }
-function getAllModules() {
+function getAllCovids() {
  return new Promise((resolve, reject) => {
-    sql.query("SELECT id, name FROM module", function (err, rows ) {
+    sql.query("SELECT id, name, link, cost, btnName, description FROM covid", function (err, rows ) {
       if (err) reject(err);
       resolve(rows);
     });
@@ -67,59 +68,59 @@ function getAllTreatments() {
     });
   });
 }
-function getAllCovids() {
- return new Promise((resolve, reject) => {
-    sql.query("SELECT id, name, description, link, cost, btnName FROM covid", function (err, rows ) {
-      if (err) reject(err);
-      resolve(rows);
-    });
-  });
+
+Covid.info = async (request, response) => {
+  const slugs = await getAllSlugs();
+  const covids = await getAllCovids();
+  response(null, { slugs, covids });
 }
-Page.getBySlug = async (request, response) => {
+
+Covid.getBySlug = async (request, response) => {
   sql.connect(error => {
     if (error) response(error, null);
     console.log("Successfully connected to the database.");
-    sql.query("SELECT * FROM page WHERE slug = ?", [request.slug], async function (err, result ) {
+    
+    sql.query("SELECT * FROM covid WHERE link = ?", [request.slug], async function (err, result ) {
       if (err) response(err, null);
       const slugs = await getAllSlugs();
-      const modules = await getAllModules();
       const treatments = await getAllTreatments();
-      const covids = await getAllCovids();
-      response(null, { slugs, modules, treatments, covids, model_type: result[0] ? 'page' : '404', ...result[0] });
+      response(null, { slugs, treatments, model_type: 'covid', ...result[0] });
     });
   });
 };
 
-Page.getAll = async (request, response) => {
+Covid.getAll = async (request, response) => {
   // open the MySQL connection
   sql.connect(error => {
     if (error) response(error, null);
     console.log("Successfully connected to the database.");
     
-    sql.query("SELECT * FROM page", function (err, result) {
+    sql.query("SELECT * FROM covid", function (err, result) {
       if (err) response(err, null);
       response(null, {...result});
     });
   });
 };
 
-Page.update = async (request, response) => {
+Covid.update = async (request, response) => {
   const { id, data } = request;
   sql.connect(error => {
     if (error) response(error, null);
     console.log("Successfully connected to the database.");
     const d = new Date();
     const dateString = d.toString();
-    sql.query("UPDATE page SET name = ?, slug = ?, meta_title = ?, meta_description = ?, type = ?, sections = ?, date = ?, status = ?, page_content = ? WHERE id = ? ",
+
+    sql.query("UPDATE covid SET name = ?, link = ?, meta_title = ?, meta_description = ?, description = ?, cost = ?, btnName = ?, steps = ?, content = ?, date = ? WHERE id = ? ",
       [data.name,
-       data.slug ? data.slug : data.name.toLowerCase(),
+       data.link ? data.link : data.name.toLowerCase().replace(' ', '_'),
        data.meta_title,
        data.meta_description,
-       data.type ? data.type : 'single',
-       data.sections ? JSON.stringify(data.sections) : null,
+       data.description,
+       data.cost,
+       data.btnName,
+       data.steps ? JSON.stringify(data.steps) : null,
+       data.content ? JSON.stringify(data.content) : null,
        dateString,
-       0,
-       data.page_content ? JSON.stringify(data.page_content) : null,
        id
       ],
       function (err, result) {
@@ -130,16 +131,16 @@ Page.update = async (request, response) => {
   });
 };
 
-Page.delete = async (request, response) => {
+Covid.delete = async (request, response) => {
   sql.connect(error => {
     if (error) response(error, null);
     console.log("Successfully connected to the database.");
 
-    sql.query("DELETE FROM page WHERE id = ?", [request.pageId], function (err, result ) {
+    sql.query("DELETE FROM covid WHERE id = ?", [request.covidId], function (err, result ) {
       if (err) response(err, null);
       response(null, { ...result });
     });
   });
 };
 
-module.exports = Page;
+module.exports = Covid;

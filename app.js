@@ -24,6 +24,7 @@ const moduleRoutes = require("./app/routes/module.routes");
 const sectionRoutes = require("./app/routes/section.routes");
 const pageRoutes = require("./app/routes/page.routes");
 const treatmentRoutes = require("./app/routes/treatment.routes");
+const covidRoutes = require("./app/routes/covid.routes");
 
 app.use('/api/user', userRoutes);
 app.use('/api/custom', customRoutes);
@@ -31,6 +32,7 @@ app.use('/api/module', moduleRoutes);
 app.use('/api/section', sectionRoutes);
 app.use('/api/page', pageRoutes);
 app.use('/api/treatment', treatmentRoutes);
+app.use('/api/covid', covidRoutes);
 
 // set port, listen for requests
 app.listen(process.env.SERVER_PORT || 5000, () => {

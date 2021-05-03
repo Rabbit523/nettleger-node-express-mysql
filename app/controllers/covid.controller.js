@@ -1,4 +1,4 @@
-const Treatment = require("../models/treatment.model.js");
+const Covid = require("../models/covid.model.js");
 
 const resCallback = (res, err, data, defaultErrMessage = null) => {
   if (err) {
@@ -10,7 +10,7 @@ const resCallback = (res, err, data, defaultErrMessage = null) => {
     res.status(200).send(data);
   }
 };
-// Get treatment info
+// Get Covid info
 exports.info = (req, res) => {
   // Validate request
   if (!req.body) {
@@ -20,10 +20,10 @@ exports.info = (req, res) => {
     });
   }
 
-  // Save Treatment in the database
-  Treatment.info(new Treatment(req.body), (err, data) => resCallback(res, err, data, "Some error occurred while registering."));
+  // Save Covid in the database
+  Covid.info(new Covid(req.body), (err, data) => resCallback(res, err, data, "Some error occurred while registering."));
 };
-// Create a Treatment
+// Create a Covid
 exports.create = (req, res) => {
   // Validate request
   if (!req.body) {
@@ -33,11 +33,11 @@ exports.create = (req, res) => {
     });
   }
 
-  // Save Treatment in the database
-  Treatment.create(new Treatment(req.body), (err, data) => resCallback(res, err, data, "Some error occurred while registering."));
+  // Save Covid in the database
+  Covid.create(new Covid(req.body), (err, data) => resCallback(res, err, data, "Some error occurred while registering."));
 };
 
-// Get Treatment by ID
+// Get Covid by ID
 exports.getById = (req, res) => {
   // Validate request
   if (!req.body) {
@@ -47,10 +47,10 @@ exports.getById = (req, res) => {
     });
   }
   // Save User in the database
-  Treatment.getById(new Treatment(req.body), (err, data) => resCallback(res, err, data, "Some error occurred while authenticating."));
+  Covid.getById(new Covid(req.body), (err, data) => resCallback(res, err, data, "Some error occurred while authenticating."));
 };
 
-// Get Treatment by ID
+// Get Covid by ID
 exports.getBySlug = (req, res) => {
   // Validate request
   if (!req.body) {
@@ -60,15 +60,15 @@ exports.getBySlug = (req, res) => {
     });
   }
   // Save User in the database
-  Treatment.getBySlug(new Treatment(req.body), (err, data) => resCallback(res, err, data, "Some error occurred while authenticating."));
+  Covid.getBySlug(new Covid(req.body), (err, data) => resCallback(res, err, data, "Some error occurred while authenticating."));
 };
 
-// Get all Treatments
+// Get all Covids
 exports.getAll = (req, res) => {
-  Treatment.getAll(req, (err, data) => resCallback(res, err, data, "Some error occurred while authenticating."));
+  Covid.getAll(req, (err, data) => resCallback(res, err, data, "Some error occurred while authenticating."));
 };
 
-// Update a Treatment by ID
+// Update a Covid by ID
 exports.update = (req, res) => {
   // Validate request
   if (!req.body) {
@@ -79,10 +79,10 @@ exports.update = (req, res) => {
   }
 
   // Save User in the database
-  Treatment.update(new Treatment(req.body), (err, data) => resCallback(res, err, data, "Some error occurred while authenticating."));
+  Covid.update(new Covid(req.body), (err, data) => resCallback(res, err, data, "Some error occurred while authenticating."));
 };
 
-// Delete a Treatment by ID
+// Delete a Covid by ID
 exports.delete = (req, res) => {
   // Validate request
   if (!req.body) {
@@ -93,5 +93,5 @@ exports.delete = (req, res) => {
   }
 
   // Save User in the database
-  Treatment.delete(new Treatment(req.body), (err, data) => resCallback(res, err, data, "Some error occurred while authenticating."));
+  Covid.delete(new Covid(req.body), (err, data) => resCallback(res, err, data, "Some error occurred while authenticating."));
 };
