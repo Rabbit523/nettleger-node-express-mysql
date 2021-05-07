@@ -2,6 +2,7 @@ const multer = require('multer');
 const axios = require('axios');
 const parseString = require('xml2js').parseString;
 const sql = require("../models/db.js");
+require("dotenv").config();
 
 // File upload
 const storage = multer.diskStorage({
@@ -49,34 +50,60 @@ exports.fileupload = (req, res) => {
   });
 };
 
-exports.registerNets = async (req, res) => {
-  const merchantId = process.env.NETS_MERCHANT_ID;
-  const token = process.env.NETS_TOKEN;
-  const orderNumber = req.body.orderNumber;
+exports.checkout = async (req, res) => {
   const amount = req.body.amount;
   const currencyCode = req.body.currency ? req.body.currency : 'NOK';
-  const serviceType = 'C';
-  const pan = req.body.pan;
-  const expiryDate = req.body.expiryDate;
-  const securityCode = req.body.securityCode;
 
-  const url = `https://test.epayment.nets.eu/Netaxept/Register.aspx?merchantId=${merchantId}&token=${token}&orderNumber=${orderNumber}&amount=${amount}&CurrencyCode=${currencyCode}&serviceType=${serviceType}&pan=${pan}&expiryDate=${expiryDate}&securityCode=${securityCode}`;
-  const response = await axios.get(url);
+  const order = {
+    order: {
+      items: [
+        {
+          reference: '21',
+          name: 'testproduct',
+          quantity: 2,
+          unit: 'kg',
+          unitPrice: 111840,
+          taxRate: 2500,
+          taxAmount: 55920,
+          grossTotalAmount: amount,
+          netTotalAmount: 223680,
+        },
+      ],
+      amount: amount,
+      currency: 'NOK',
+      reference: 'Easy Order',
+    },
+    checkout: {
+      url: 'http://localhost:3000',
+      termsUrl: 'https://localhost:3000/toc',
+      consumerType: {
+        supportedTypes: ['B2C', 'B2B'],
+        default: 'B2B',
+      },
+    },
+  };
 
-  if(response.status == 200) {
-    const xml = response.data;
-    parseString(xml, {trim: true}, function (err, result) {
-      if (err) {
-        res.status(400).send({ message: "Netaxept response xml parse failed" });
+  try {
+    const response = await axios.post(
+      process.env.NETS_API_URL,
+      order,
+      {
+        headers: {
+          Authorization: process.env.NETS_SECRET_KEY,
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        }
       }
-      if (result.RegisterResponse) {
-        res.send({ transactionId: result.RegisterResponse.TransactionId[0] });
-      } else if (result.Exception) {
-        res.status(400).send({ message: result.Exception.Error[0].Message[0] });
-      }
-    });
-  } else {
-    res.status(400).send({ message: "Netaxept register failed" });
+    );
+    // console.log(response);
+    if(response.status == 201) {
+      res.send(response.data.paymentId);
+    } else {
+      res.status(400).send({ message: "Nets Easy payment failed" });
+    }
+  } catch (err) {
+    console.log(err);
+    res.status(400).send({ message: "Nets Easy payment failed" });
   }
 };
 

@@ -4,8 +4,10 @@
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node app.js",
-    "watch": "nodemon app.js"
+    "dev-start": "cross-env NODE_ENV=development node app.js",
+    "dev-watch": "cross-env NODE_ENV=development nodemon app.js",
+    "pro-start": "cross-env NODE_ENV=production node app.js",
+    "pro-watch": "cross-env NODE_ENV=production nodemon app.js"
   },
   "author": "Dmitrii Katserikov",
   "license": "ISC",
@@ -24,5 +26,8 @@
   },
   "engines": {
     "node": "12.x"
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.3"
   }
 }
