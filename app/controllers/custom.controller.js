@@ -74,8 +74,8 @@ exports.checkout = async (req, res) => {
       reference: 'Easy Order',
     },
     checkout: {
-      url: 'http://localhost:3000',
-      termsUrl: 'https://localhost:3000/toc',
+      url: `${process.env.SERVER_URL}`,
+      termsUrl: `${process.env.SERVER_URL}/toc`,
       consumerType: {
         supportedTypes: ['B2C', 'B2B'],
         default: 'B2B',
